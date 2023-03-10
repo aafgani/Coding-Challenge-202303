@@ -3,7 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32616.157
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactApi", "ContactApi\ContactApi.csproj", "{57AAF5DB-45EE-490A-AAE6-40BBE316478A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactApi", "ContactApi\ContactApi.csproj", "{57AAF5DB-45EE-490A-AAE6-40BBE316478A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{37973735-58F6-48AB-B293-17A0D12213F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTest", "UnitTest", "{AECB0077-CBF8-4D21-B28D-956C10B9A044}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deployment", "Deployment", "{5072B722-9449-4577-86A8-55275562DB55}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClassLib", "ClassLib", "{DDE0797D-8438-4049-98FA-5FEB92A2BC46}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,6 +26,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{57AAF5DB-45EE-490A-AAE6-40BBE316478A} = {37973735-58F6-48AB-B293-17A0D12213F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5271F299-BE95-4EC7-9E2B-0C86ABD01E0A}
