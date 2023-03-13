@@ -8,10 +8,12 @@ namespace Api.Controllers
     public class CacheController : Controller
     {
         private readonly ICacheHelper<int> _cacheHelper;
+        private readonly ILogger<CacheController> _logger;
 
-        public CacheController(ICacheHelper<int> cacheHelper)
+        public CacheController(ICacheHelper<int> cacheHelper, ILogger<CacheController> logger)
         {
             _cacheHelper = cacheHelper;
+            _logger = logger;
         }
 
         [HttpPost]
