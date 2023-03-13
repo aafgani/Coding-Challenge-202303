@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using ContactApi.Model;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Model;
 using Model.AppConfig;
@@ -23,7 +24,7 @@ namespace Infrastructure.HttpClientService
             _logger = logger;
         }
 
-        private async Task<T> PostAsync<T>(Object param, string url, HttpMethod httpMethod)
+        private async Task<T> SendAsync<T>(Object param, string url, HttpMethod httpMethod)
         {
             try
             {
@@ -46,7 +47,15 @@ namespace Infrastructure.HttpClientService
         {
             var url = HttpClientUrl.CreateUser;
             _logger.LogInformation(String.Format(" send to {0} : body {1}", url, JsonConvert.SerializeObject(user)));
-            var result = await PostAsync<int>(user, url, HttpMethod.Post);
+            var result = await SendAsync<int>(user, url, HttpMethod.Post);
+            return result;
+        }
+
+        public async Task<CacheStatus<int>> QueryCache()
+        {
+            var url = HttpClientUrl.GetCacheStats;
+            _logger.LogInformation(String.Format(" send to {0} ", url));
+            var result = await SendAsync<CacheStatus<int>>(null, url, HttpMethod.Get);
             return result;
         }
     }

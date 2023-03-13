@@ -16,11 +16,20 @@ namespace Api.Controllers
             _logger = logger;
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult Index()
         {
-            var statistic = _cacheHelper.GetStatus();
-            return Ok(statistic);
+            try
+            {
+                var statistic = _cacheHelper.GetStatus();
+                return Ok(statistic);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e.Message);
+                return BadRequest();
+            }
+            
         }
     }
 }
