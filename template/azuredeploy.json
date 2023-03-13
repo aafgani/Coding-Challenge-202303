@@ -54,7 +54,7 @@
   },
   "resources": [
     {
-      "name": "[parameters('apiBaseName')]",
+      "name": "[parameters('appBaseName')]",
       "type": "Microsoft.Web/serverfarms",
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-08-01",
@@ -66,7 +66,7 @@
         "displayName": "appBase"
       },
       "properties": {
-        "name": "[parameters('apiBaseName')]",
+        "name": "[parameters('appBaseName')]",
         "numberOfWorkers": 1
       }
     },
@@ -76,7 +76,7 @@
       "location": "[resourceGroup().location]",
       "apiVersion": "2015-08-01",
       "dependsOn": [
-        "[resourceId('Microsoft.Web/serverfarms', parameters('apiBaseName'))]"
+        "[resourceId('Microsoft.Web/serverfarms', parameters('appBaseName'))]"
       ],
       "tags": {
         "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('apiBaseName')))]": "Resource",
@@ -84,7 +84,7 @@
       },
       "properties": {
         "name": "[parameters('apiBaseName')]",
-        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('apiBaseName'))]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appBaseName'))]",
         "CURRENT_STACK": "[parameters('currentStack')]",
         "numberOfWorkers": 1,
         "siteConfig": {
