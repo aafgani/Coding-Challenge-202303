@@ -3,7 +3,8 @@ using Web.DI;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(options => options.JsonSerializerOptions.WriteIndented = true);
 builder.Services.AddConfiguration(builder.Configuration);
 builder.Services.AddService();
 

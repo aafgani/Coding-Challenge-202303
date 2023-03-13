@@ -17,7 +17,7 @@ namespace Web.Controllers
         public async Task<IActionResult> IndexAsync()
         {
             var queryCache = await serviceClient.QueryCache();
-            ViewBag.JsonData = JsonConvert.SerializeObject(queryCache);
+            ViewBag.JsonData = Newtonsoft.Json.Linq.JValue.Parse(JsonConvert.SerializeObject(queryCache)).ToString(Newtonsoft.Json.Formatting.Indented);
             return View();
         }
     }
