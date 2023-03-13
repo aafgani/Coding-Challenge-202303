@@ -72,24 +72,6 @@ namespace Infrastructure.Cache
             stats.TotalHits = s.TotalHits;
             stats.TotalMisses = s.TotalMisses;
             stats.CurrentEntryCount = s.CurrentEntryCount;
-            stats.CurrentEntry = new List<KeyValuePair<T, object>>();
-
-            if (entriesCollectionValue != null)
-            {
-                foreach (var item in entriesCollectionValue)
-                {
-                    var methodKey = item.GetType().GetProperty("Key");
-                    var key = methodKey.GetValue(item);
-
-                    var methodValue = item.GetType().GetProperty("Value");
-                    var value = methodValue.GetValue(item);
-
-                    var methodValue2 = value.GetType().GetProperty("Value");
-                    var value2 = methodValue2.GetValue(value);
-
-                    stats.CurrentEntry.Add(new KeyValuePair<T, object>((T)key, value2));
-                }
-            }
             stats.FrequencyHits = cacheItemFrequencyHits
                     .SelectMany(i => i.HitsAt.Where(i => i > DateTime.Now.AddSeconds(-5)), (item, value)=> Tuple.Create(item.Key, value));
 
