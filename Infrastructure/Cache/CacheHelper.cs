@@ -93,10 +93,6 @@ namespace Infrastructure.Cache
             stats.FrequencyHits = cacheItemFrequencyHits
                     .SelectMany(i => i.HitsAt.Where(i => i > DateTime.Now.AddSeconds(-5)), (item, value)=> Tuple.Create(item.Key, value));
 
-            //stats.FrequencyHits = cacheItemFrequencyHits
-            //       .SelectMany(i => i.HitsAt.Where(i => i > DateTime.Now.AddSeconds(-5)), (item, value) => Tuple.Create(item.Key, value))
-            //       .GroupBy(i => i.Item1).ToList();
-
             return stats;
         }
 
