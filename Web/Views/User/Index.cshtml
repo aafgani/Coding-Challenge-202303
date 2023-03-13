@@ -4,16 +4,61 @@
 @model User
 
 <div class="text-center">
-    <form asp-action="Create" id="form-action" method="post" class="row row-cols-lg-auto g-3 align-items-center" role="form">
+    <form id="form-action" method="post" class="row row-cols-lg-auto g-3 align-items-center" role="form">
         <div class="col-12">
             <label class="visually-hidden" for="inlineFormInputGroupUsername">Username</label>
             <div class="input-group">
-                <input asp-for="Number" class="form-control" placeholder="n User" />
+                <input asp-for="Number" class="form-control" placeholder="n User" id="n-user" />
             </div>
         </div>
 
         <div class="col-12">
-            <input type="submit" id="form-button" class="btn btn-primary" value="Submit" />
+            @* <input type="submit" id="form-button" class="btn btn-primary" value="Submit" />*@
+            <input type="submit" class="btn btn-primary" value="Submit" id="btn-submit-user" />
+            <div id="loading">loading...</div>
         </div>
     </form>
 </div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        console.log("ready!");
+        $('#loading').hide();
+    });
+
+    $("#btn-submit-user").click(function(e) {
+        e.preventDefault();
+
+        $('#btn-submit-user').prop('disabled', true);
+        $('#loading').show();
+        var user = new Object();
+        user.Number = $('#n-user').val(); 
+        console.log(JSON.stringify(user));
+        if (user != null) {
+            $.ajax({
+                type: "POST",
+                url: "/User/Generate",
+                data: JSON.stringify(user),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(response) {
+                    if (response != null) {
+                        alert(response.number+" users created successfully!");
+                    } else {
+                        alert("Something went wrong");
+                    }
+                    $('#loading').hide();
+                    $('#btn-submit-user').prop('disabled', false);
+                    $('#n-user').val(''); 
+                },
+                failure: function(response) {
+                    alert(response.responseText);
+                },
+                error: function(response) {
+                    alert(response.responseText);
+                }
+            });
+        }
+    });
+</script>

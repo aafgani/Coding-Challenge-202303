@@ -20,17 +20,38 @@ namespace Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create(User user)
+        public async Task<JsonResult> Generate([FromBody] User user)
         {
-            var t = await serviceClient.CreateUser(user);
             List<Task> tasksCreateUser = new List<Task>();
+            List<int> sentUser = new List<int>();
             for (int i = 0; i < user.Number; i++)
             {
-                tasksCreateUser.Add(serviceClient.CreateUser(UserFactory.GenerateUser()));
+                var generatedUser = UserFactory.GenerateUser();
+                tasksCreateUser.Add(SendUser(generatedUser));
+                sentUser.Add(generatedUser.Number);
             }
             Task.WaitAll(tasksCreateUser.ToArray());
 
-            return RedirectToAction("Index");
+            return Json(user);
+        }
+
+        private Task SendUser(User user)
+        {
+            var TCS = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            try
+            {
+                Random rnd = new Random();
+                int min = 1000, max = 5000;
+                Thread.Sleep(rnd.Next(min, max));
+                serviceClient.CreateUser(UserFactory.GenerateUser());
+
+                TCS.SetResult();
+            }
+            catch (Exception e)
+            {
+                TCS.SetException(new ApplicationException(e.Message));
+            }
+            return TCS.Task;
         }
     }
 }
