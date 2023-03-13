@@ -1,0 +1,74 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger: 
+- main
+
+variables:
+  buildConfiguration: 'Release'
+  buildPlatform: 'Any CPU'
+  webApiProjName : 'Api'
+  armTemplateFolder : 'template'
+
+stages:
+- stage : 'Build'
+  displayName: 'Build The Application'
+  jobs:
+    - job: 'Build_Web_App'
+      displayName: 'Build Web App'
+      pool:
+        vmImage: ubuntu-latest
+      steps:
+        - task: UseDotNet@2
+          inputs:
+            packageType: 'sdk'
+            version: '6.x'
+        - task: Assembly-Info-NetCore@3
+          inputs:
+            Path: '$(Build.SourcesDirectory)'
+            FileNames: '*/$(webApiProjName).csproj'
+            InsertAttributes: true
+            FileEncoding: 'utf-8'
+            WriteBOM: true
+            InformationalVersion: '$(Build.BuildNumber)'
+            LogLevel: 'verbose'
+            FailOnWarning: false
+            DisableTelemetry: false
+        - task: DotNetCoreCLI@2
+          displayName: 'Restore project dependencies'
+          inputs:
+            command: 'restore'
+            projects: '**/$(webApiProjName).csproj'
+        - task: DotNetCoreCLI@2
+          displayName: 'Build the project - $(buildConfiguration)'
+          inputs:
+            command: 'build'
+            projects: '**/$(webApiProjName).csproj'
+            arguments: '--no-restore --configuration $(buildConfiguration)'
+        - task : DotNetCoreCLI@2
+          displayName: 'Publish the project - $(buildConfiguration)'
+          inputs:
+            command: 'publish'
+            publishWebProjects: false
+            projects: '**/$(webApiProjName).csproj'
+            arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(webApiProjName)/$(buildConfiguration)'
+            zipAfterPublish: true
+        - task : PublishBuildArtifacts@1
+          displayName: 'Publish Artifact: drop'
+          condition: succeeded()    
+    - job: 'Copy_ARM_Template'
+      displayName: 'Copy ARM Template'
+      pool:
+       vmImage: ubuntu-latest
+      steps:
+        - task : CopyFiles@2
+          inputs:
+            SourceFolder: '$(armTemplateFolder)/'
+            Contents: 'azuredeploy*.json'
+            TargetFolder: '$(Build.artifactStagingDirectory)/ARM'
+        - task: PublishBuildArtifacts@1
+          inputs:
+           pathToPublish: $(Build.ArtifactStagingDirectory)
+           publishLocation: 'Container'
