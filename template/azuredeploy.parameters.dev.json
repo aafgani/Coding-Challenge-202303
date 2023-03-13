@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+      "appBaseName": {
+          "value": "#arm_appBaseName#" 
+      },
+      "currentStack": {
+          "value": "dotnet" 
+      },
+      "phpVersion": {
+          "value": "OFF" 
+      },
+      "netFrameworkVersion": {
+          "value": "v6.0" 
+      },
+      "tagName": {
+          "value": "code.challenge.api" 
+      },
+      "appBaseSkuName": {
+          "value": "F1"
+      },
+      "appSettings": {
+          "value": {
+            "ASPNETCORE_ENVIRONMENT": "Development",
+            "WebCacheServiceConfiguration_BaseURL": "#arm_WebCacheServiceConfiguration_BaseURL#"
+          }
+      },
+      "apiBaseName": {
+          "value": "#arm_apiName#" 
+      }
+  }
+}

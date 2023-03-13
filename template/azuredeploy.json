@@ -1,0 +1,105 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "apiBaseName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "appBaseSkuName": {
+      "type": "string",
+      "defaultValue": "F1",
+      "allowedValues": [
+        "F1",
+        "D1",
+        "B1",
+        "B2",
+        "B3",
+        "S1",
+        "S2",
+        "S3",
+        "P1",
+        "P2",
+        "P3",
+        "P4"
+      ],
+      "metadata": {
+        "description": "Describes plan's pricing tier and capacity. Check details at https://azure.microsoft.com/en-us/pricing/details/app-service/"
+      }
+    },
+    "currentStack": {
+      "type": "string"
+    },
+    "phpVersion": {
+      "type": "string"
+    },
+    "netFrameworkVersion": {
+      "type": "string"
+    },
+    "tagName": {
+      "type": "string"
+    },
+    "appSettings": {
+      "type": "object",
+      "defaultValue": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "name": "[parameters('apiBaseName')]",
+      "type": "Microsoft.Web/serverfarms",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "sku": {
+        "name": "[parameters('appBaseSkuName')]"
+      },
+      "dependsOn": [],
+      "tags": {
+        "displayName": "appBase"
+      },
+      "properties": {
+        "name": "[parameters('apiBaseName')]",
+        "numberOfWorkers": 1
+      }
+    },
+    {
+      "name": "[parameters('apiBaseName')]",
+      "type": "Microsoft.Web/sites",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2015-08-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/serverfarms', parameters('apiBaseName'))]"
+      ],
+      "tags": {
+        "[concat('hidden-related:', resourceId('Microsoft.Web/serverfarms', parameters('apiBaseName')))]": "Resource",
+        "displayName": "[parameters('tagName')]"
+      },
+      "properties": {
+        "name": "[parameters('apiBaseName')]",
+        "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('apiBaseName'))]",
+        "CURRENT_STACK": "[parameters('currentStack')]",
+        "numberOfWorkers": 1,
+        "siteConfig": {
+          "appSettings": [
+            {
+              "name": "ASPNETCORE_ENVIRONMENT",
+              "value": "[parameters('appSettings').ASPNETCORE_ENVIRONMENT]"
+            },
+            {
+              "name": "WebCacheServiceConfiguration:BaseURL",
+              "value": "[parameters('appSettings').WebCacheServiceConfiguration_BaseURL]"
+            }
+          ],
+          "ftpsState": "FtpsOnly",
+          "netFrameworkVersion": "[parameters('netFrameworkVersion')]"
+        },
+        "httpsOnly": true
+      }
+    }
+  ],
+  "outputs": {}
+}
