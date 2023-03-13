@@ -115,3 +115,34 @@ stages:
           inputs:
            pathToPublish: $(Build.ArtifactStagingDirectory)
            publishLocation: 'Container'
+- stage: 'Dev'
+  displayName: 'Deploy to Dev'
+  variables:
+    - group: 'DEV'
+  jobs: 
+    - deployment: 
+      pool:
+        vmImage: 'ubuntu-latest'
+      environment: 'Dev'
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - download: current
+                artifact: drop
+              - task: replacetokens@5
+                inputs:
+                  rootDirectory: '$(Pipeline.Workspace)/drop/ARM'
+                  targetFiles: 'azuredeploy.parameters.dev.json'
+                  encoding: 'auto'
+                  tokenPattern: 'custom'
+                  tokenPrefix: '#'
+                  tokenSuffix: '#'
+                  writeBOM: true
+                  actionOnMissing: 'warn'
+                  keepToken: false
+                  actionOnNoFiles: 'continue'
+                  enableTransforms: false
+                  enableRecursion: false
+                  useLegacyPattern: false
+                  enableTelemetry: true
