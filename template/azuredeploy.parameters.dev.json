@@ -27,7 +27,7 @@
           }
       },
       "apiBaseName": {
-          "value": "#arm_apiName#" 
+          "value": "#arm_apiBaseName#" 
       }
   }
 }

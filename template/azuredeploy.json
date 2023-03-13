@@ -6,6 +6,10 @@
       "type": "string",
       "minLength": 1
     },
+    "appBaseName": {
+      "type": "string",
+      "minLength": 1
+    },
     "appBaseSkuName": {
       "type": "string",
       "defaultValue": "F1",
