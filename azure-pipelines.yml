@@ -10,6 +10,7 @@ variables:
   buildConfiguration: 'Release'
   buildPlatform: 'Any CPU'
   webApiProjName : 'Api'
+  webApiProjNameResolve : 'ContactApi'
   webAppProjName : 'Web'
   armTemplateFolder : 'template'
 
@@ -165,4 +166,4 @@ stages:
                   azureSubscription: 'Azure subscription 1(1)(07dbce66-6476-4471-a7ce-a2ff48fe684b)'
                   appType: 'webApp'
                   WebAppName: '$(arm_apiBaseName)'
-                  packageForLinux: '$(Pipeline.Workspace)/drop/$(webApiProjName)/$(buildConfiguration)/$(webApiProjName).zip'
+                  packageForLinux: '$(Pipeline.Workspace)/drop/$(webApiProjName)/$(buildConfiguration)/$(webApiProjNameResolve).zip'
