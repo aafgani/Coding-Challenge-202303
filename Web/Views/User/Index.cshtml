@@ -40,7 +40,6 @@
             let min = Math.ceil(1000);
             let max = Math.floor(5000);
             let delay = randomNumber(min, max);
-            console.log("delay " + delay)
             setInterval(SendUser, delay);
         }
 
@@ -61,7 +60,7 @@
                 dataType: "json",
                 success: function(response) {
                     if (response != null) {
-                        console.log('user ' + response.number + " created successfully! - " + new Date().toLocaleString());
+                       console.log('user ' +  user.Number + " created successfully with response !  "+response+" - " + new Date().toLocaleString());
                     } else {
                         alert("Something went wrong");
                     }
