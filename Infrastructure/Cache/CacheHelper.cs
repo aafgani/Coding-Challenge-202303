@@ -36,7 +36,7 @@ namespace Infrastructure.Cache
                 if (currentEntryCount < maxEntry)
                 {
                     cacheEntry = createItem();
-                    memoryCache.Set(key, cacheEntry);
+                    memoryCache.Set(key, cacheEntry, TimeSpan.FromMinutes(1));
 
                     cacheItemFrequencyHits.Add(new CacheItemFrequencyHits<T>
                     {
