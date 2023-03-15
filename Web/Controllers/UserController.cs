@@ -1,21 +1,26 @@
 ﻿using Infrastructure.Factory;
 using Infrastructure.HttpClientService;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Model;
+using Model.AppConfig;
 
 namespace Web.Controllers
 {
     public class UserController : Controller
     {
         private readonly IWebCacheServiceClient serviceClient;
+        private readonly WebCacheServiceConfiguration config;
 
-        public UserController(IWebCacheServiceClient serviceClient)
+        public UserController(IWebCacheServiceClient serviceClient, IOptions<WebCacheServiceConfiguration> options)
         {
             this.serviceClient = serviceClient;
+            this.config = options.Value;
         }
 
         public IActionResult Index()
         {
+            ViewBag.BaseURL = config.BaseURL;
             return View();
         }
 

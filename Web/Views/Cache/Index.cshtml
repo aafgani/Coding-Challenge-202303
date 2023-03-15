@@ -8,5 +8,37 @@
 }
 
 <pre>
-@Html.Raw(ViewBag.JsonData)
+    @Html.Raw(ViewBag.JsonData)
 </pre>
+<div id="cache-result">
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    let baseUrl = '@ViewBag.BaseURL';
+    $(document).ready(function() {
+        $.ajax({
+            type: "GET",
+            url: baseUrl + "cache/",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: true,
+            success: function(response) {
+                if (response != null) {
+                    $('#cache-result').text(response);
+                    let obj = JSON.parse(response);
+                    //document.getElementById("cache-result").innerHTML = obj;
+                    console.log(res);
+                } else {
+                    alert("Something went wrong");
+                }
+            },
+            failure: function(response) {
+                alert(response.responseText);
+            },
+            error: function(response) {
+                alert(response.responseText);
+            }
+        });
+    });
+</script>

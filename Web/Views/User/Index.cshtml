@@ -13,7 +13,6 @@
         </div>
 
         <div class="col-12">
-            @* <input type="submit" id="form-button" class="btn btn-primary" value="Submit" />*@
             <input type="submit" class="btn btn-primary" value="Submit" id="btn-submit-user" />
             <div id="loading">loading...</div>
         </div>
@@ -22,6 +21,7 @@
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript">
+    let baseUrl = '@ViewBag.BaseURL';
     $(document).ready(function() {
         console.log("ready!");
         $('#loading').hide();
@@ -32,25 +32,42 @@
 
         $('#btn-submit-user').prop('disabled', true);
         $('#loading').show();
-        var user = new Object();
-        user.Number = $('#n-user').val(); 
-        console.log(JSON.stringify(user));
+
+        var nUser = $('#n-user').val();
+        console.log("create " + nUser + ' user(s)')
+
+        for (let i = 0; i < nUser; i++) {
+            let min = Math.ceil(1000);
+            let max = Math.floor(5000);
+            let delay = randomNumber(min, max);
+            console.log("delay " + delay)
+            setInterval(SendUser, delay);
+        }
+
+        $('#loading').hide();
+        $('#btn-submit-user').prop('disabled', false);
+        $('#n-user').val('');
+    });
+
+    function SendUser() {
+        var user = GenerateUser();
         if (user != null) {
+            console.log('OK '+ user.Number);
             $.ajax({
                 type: "POST",
-                url: "/User/Generate",
+                url: baseUrl + "webserver/",
                 data: JSON.stringify(user),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
                 success: function(response) {
                     if (response != null) {
-                        alert(response.number+" users created successfully!");
+                        console.log('user ' + response.number + " created successfully! - " + new Date().toLocaleString());
                     } else {
                         alert("Something went wrong");
                     }
                     $('#loading').hide();
                     $('#btn-submit-user').prop('disabled', false);
-                    $('#n-user').val(''); 
+                    $('#n-user').val('');
                 },
                 failure: function(response) {
                     alert(response.responseText);
@@ -59,6 +76,20 @@
                     alert(response.responseText);
                 }
             });
+        } else {
+            console.log('NOT OK');
         }
-    });
+        return true;
+    }
+
+    function GenerateUser() {
+        min = Math.ceil(0);
+        max = Math.floor(100000);
+        var user = new Object();
+        user.Number = Math.round(randomNumber(min, max));
+        return user;
+    }
+    function randomNumber(min, max) {
+        return Math.random() * (max - min) + min;
+    }
 </script>
