@@ -35,23 +35,26 @@
 
         var nUser = $('#n-user').val();
         console.log("create " + nUser + ' user(s)')
-
+        let users = [];
         for (let i = 0; i < nUser; i++) {
+            var user = GenerateUser();
+            users.push(user);
+        }
+
+        users.forEach(user => {
             let min = Math.ceil(1000);
             let max = Math.floor(5000);
             let delay = randomNumber(min, max);
-            setInterval(SendUser, delay);
-        }
+            setInterval(SendUser, delay, user);
+        });
 
         $('#loading').hide();
         $('#btn-submit-user').prop('disabled', false);
         $('#n-user').val('');
     });
 
-    function SendUser() {
-        var user = GenerateUser();
+    function SendUser(user) {
         if (user != null) {
-            console.log('OK '+ user.Number);
             $.ajax({
                 type: "POST",
                 url: baseUrl + "webserver/",
@@ -60,7 +63,7 @@
                 dataType: "json",
                 success: function(response) {
                     if (response != null) {
-                       console.log('user ' +  user.Number + " created successfully with response !  "+response+" - " + new Date().toLocaleString());
+                        console.log('user ' + user.Number + " created successfully with response !  " + response + " - " + new Date().toLocaleString());
                     } else {
                         alert("Something went wrong");
                     }
