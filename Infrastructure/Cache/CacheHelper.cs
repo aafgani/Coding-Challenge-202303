@@ -72,8 +72,6 @@ namespace Infrastructure.Cache
             stats.TotalHits = s.TotalHits;
             stats.TotalMisses = s.TotalMisses;
             stats.CurrentEntryCount = s.CurrentEntryCount;
-            stats.FrequencyHits = cacheItemFrequencyHits
-                    .SelectMany(i => i.HitsAt.Where(i => i > DateTime.Now.AddSeconds(-5)), (item, value)=> Tuple.Create(item.Key, value));
 
             return stats;
         }
