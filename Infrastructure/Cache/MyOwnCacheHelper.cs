@@ -13,6 +13,7 @@ namespace Infrastructure.Cache
 {
     public class MyOwnCacheHelper<T> : ICacheHelper<T>
     {
+        private static readonly SemaphoreSlim GetUsersSemaphore = new SemaphoreSlim(1, 1);
         private readonly Dictionary<object, EntryCache<T>> _cache;
         private readonly List<Tuple<object, DateTime>> _hits;
         private readonly List<Tuple<object, DateTime>> _missed;
@@ -28,35 +29,56 @@ namespace Infrastructure.Cache
             _absoluteExpirationInMiliseconds = options.Value.AbsoluteExpiration;
         }
 
-        public T GetOrCreate(object key, Func<T> createItem)
+        private async Task<T> GetOrCreateAsync(object key, Func<T> createItem, SemaphoreSlim semaphore)
         {
             EntryCache<T> cacheEntry;
             var currentEntryCount = _cache.Count;
 
-            CheckIfAnyExpiration();
-
-            if (!_cache.TryGetValue(key, out cacheEntry))
+            try
             {
-                var item = createItem();
-                cacheEntry = new EntryCache<T>
+                await semaphore.WaitAsync();
+                if (!_cache.TryGetValue(key, out cacheEntry))
                 {
-                    Item = item,
-                    AbsoluteExpiration = TimeSpan.FromMilliseconds(_absoluteExpirationInMiliseconds),
-                    CreatedTime = DateTime.Now,
-                };
-                _missed.Add(Tuple.Create(key, DateTime.Now));
+                    var item = createItem();
+                    cacheEntry = new EntryCache<T>
+                    {
+                        Item = item,
+                        AbsoluteExpiration = TimeSpan.FromMilliseconds(_absoluteExpirationInMiliseconds),
+                        CreatedTime = DateTime.Now,
+                    };
+                    _missed.Add(Tuple.Create(key, DateTime.Now));
 
-                if (currentEntryCount < _maxEntry)
+                    if (currentEntryCount < _maxEntry || CheckIfAnyExpiration())
+                    {
+                        _cache.Add(key, cacheEntry);
+                    }
+                }
+                else
                 {
-                    _cache.Add(key, cacheEntry);
+                    _hits.Add(Tuple.Create(key, DateTime.Now));
                 }
             }
-            else
+            catch (Exception)
             {
-                _hits.Add(Tuple.Create(key, DateTime.Now));
+                throw;
             }
-
+            finally
+            {
+                semaphore.Release();
+            }    
             return cacheEntry.Item;
+        }
+
+        public async Task<T> GetOrCreateAsync(object key, Func<T> createItem)
+        {
+            try
+            {
+                return await GetOrCreateAsync(key, createItem, GetUsersSemaphore);
+            }
+            catch
+            {
+                throw;
+            }
         }
 
         public CacheStatus<T> GetStatus()

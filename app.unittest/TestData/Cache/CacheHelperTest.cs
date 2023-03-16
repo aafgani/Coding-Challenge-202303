@@ -26,7 +26,7 @@ namespace app.unittest.TestData.Cache
             //Act
             for (int i = 0; i < numberOfUsers.Count(); i++)
             {
-                cache.GetOrCreate(numberOfUsers[i], () => { return numberOfUsers[i] % 1234; });
+                cache.GetOrCreateAsync(numberOfUsers[i], () => { return numberOfUsers[i] % 1234; });
             }
 
             //Assert
@@ -51,7 +51,7 @@ namespace app.unittest.TestData.Cache
             //Act
             for (int i = 0; i < numberOfUsers.Count(); i++)
             {
-                cache.GetOrCreate(numberOfUsers[i], () => { return numberOfUsers[i] % 1234; });
+                cache.GetOrCreateAsync(numberOfUsers[i], () => { return numberOfUsers[i] % 1234; });
             }
 
             //Assert
@@ -76,7 +76,7 @@ namespace app.unittest.TestData.Cache
             //Act
             for (int i = 0; i < numberOfUsers.Count(); i++)
             {
-                cache.GetOrCreate(numberOfUsers[i], () => { return numberOfUsers[i] % 1234; });
+                cache.GetOrCreateAsync(numberOfUsers[i], () => { return numberOfUsers[i] % 1234; });
                 if (i==4)
                 {
                     Thread.Sleep(TimeSpan.FromMilliseconds(4000));

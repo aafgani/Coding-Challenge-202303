@@ -5,7 +5,7 @@ namespace Infrastructure.Cache
 {
     public interface ICacheHelper<T>
     {
-        T GetOrCreate(object key, Func<T> createItem);
+        Task<T> GetOrCreateAsync(object key, Func<T> createItem);
         CacheStatus<T> GetStatus();
     }
 }

@@ -23,7 +23,7 @@ namespace ContactApi.Controllers
             try
             {
                 _logger.LogInformation(String.Format("Creating user {0}", user.Number));
-                var item = _cacheHelper.GetOrCreate(user.Number, () => { return user.Number % 1234; });
+                var item = _cacheHelper.GetOrCreateAsync(user.Number, () => { return user.Number % 1234; }).Result;
                 return Ok(item);
             }
             catch (Exception e)

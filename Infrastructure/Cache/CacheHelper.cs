@@ -27,7 +27,7 @@ namespace Infrastructure.Cache
             cacheItemFrequencyHits = new List<CacheItemFrequencyHits<T>>();
         }
 
-        public T GetOrCreate(object key, Func<T> createItem)
+        public T GetOrCreateAsync(object key, Func<T> createItem)
         {
             T cacheEntry;
             var currentEntryCount = memoryCache.GetCurrentStatistics()?.CurrentEntryCount;
@@ -76,5 +76,9 @@ namespace Infrastructure.Cache
             return stats;
         }
 
+        Task<T> ICacheHelper<T>.GetOrCreateAsync(object key, Func<T> createItem)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
