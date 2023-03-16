@@ -23,7 +23,9 @@
     "appSettings": {
       "value": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "WebCacheServiceConfiguration_BaseURL": "#arm_WebCacheServiceConfiguration_BaseURL#"
+        "WebCacheServiceConfiguration_BaseURL": "#arm_WebCacheServiceConfiguration_BaseURL#",
+        "CacheConfiguration_MaxEntry": "#arm_CacheConfiguration_MaxEntry#",
+        "CacheConfiguration_AbsoluteExpiration": "#arm_CacheConfiguration_AbsoluteExpiration#"
       }
     },
     "apiBaseName": {

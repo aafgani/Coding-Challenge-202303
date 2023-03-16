@@ -100,6 +100,14 @@
             {
               "name": "WebCacheServiceConfiguration:BaseURL",
               "value": "[parameters('appSettings').WebCacheServiceConfiguration_BaseURL]"
+            },
+            {
+              "name": "CacheConfiguration:MaxEntry",
+              "value": "[parameters('appSettings').CacheConfiguration_MaxEntry]"
+            },
+            {
+              "name": "CacheConfiguration:AbsoluteExpiration",
+              "value": "[parameters('appSettings').CacheConfiguration_AbsoluteExpiration]"
             }
           ],
           "ftpsState": "FtpsOnly",
