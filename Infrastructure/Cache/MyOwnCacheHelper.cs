@@ -33,6 +33,8 @@ namespace Infrastructure.Cache
             EntryCache<T> cacheEntry;
             var currentEntryCount = _cache.Count;
 
+            CheckIfAnyExpiration();
+
             if (!_cache.TryGetValue(key, out cacheEntry))
             {
                 var item = createItem();
@@ -44,7 +46,7 @@ namespace Infrastructure.Cache
                 };
                 _missed.Add(Tuple.Create(key, DateTime.Now));
 
-                if (currentEntryCount < _maxEntry || AnyExpiredItem())
+                if (currentEntryCount < _maxEntry)
                 {
                     _cache.Add(key, cacheEntry);
                 }
@@ -70,7 +72,7 @@ namespace Infrastructure.Cache
             return stats;
         }
 
-        private bool AnyExpiredItem()
+        private bool CheckIfAnyExpiration()
         {
             var anyExpired = _cache.Where(i => i.Value.CreatedTime.Add(i.Value.AbsoluteExpiration) < DateTime.Now).ToList();
             anyExpired.ForEach(i =>
